@@ -26,8 +26,9 @@ public class StoreController {
         return "redirect:/inventory";
     }
 
-    @GetMapping("inventory")
-    public String getInventory() {
+    @GetMapping("/inventory")
+    public String getInventory(Model model) {
+        model.addAttribute("items", items);
         return "inventory";
     }
 

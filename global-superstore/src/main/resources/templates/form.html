@@ -15,7 +15,7 @@
                     <option th:each = "category : ${categories}" th:text="${category}" th:value="${category}">Placeholder</option>
                 </select>
                 <input type="text" placeholder="Name" th:field="*{name}">
-                <input class="half" type="text" placeholder="Price" th:field="*{name}">
+                <input class="half" type="text" placeholder="Price" th:field="*{price}">
                 <input class="half" type="text" placeholder="Discount" th:field="*{discount}">
                 <h4>Order Date</h4>
                 <input type="date" style="color:black" th:field="*{date}">
