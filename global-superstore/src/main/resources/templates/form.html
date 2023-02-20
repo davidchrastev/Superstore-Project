@@ -1,4 +1,4 @@
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
     <head> 
         <link th:href="@{/form-stylesheet.css}" rel="stylesheet"> 
     </head>    
@@ -12,7 +12,7 @@
             <form method="post">
                 <select class="select">
                     <option style="color:blue">Choose Category</option>
-                    <option> Placeholder </option>
+                    <option th:each = "category : ${categories}" th:text="${category}"></option>
                 </select>
                 <input type="text" placeholder="Name">
                 <input class="half" type="text" placeholder="Price">
