@@ -50,6 +50,8 @@ table tbody td {
     border-bottom: 1px solid black;
     text-align: center;
     font-size: 18px;
+    background-color: #008000;
+    color: #fff;
 }
 
 table tbody td[type=currency], td[type=date] {

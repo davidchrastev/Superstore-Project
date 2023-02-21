@@ -4,6 +4,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 
 public class Item {
@@ -13,10 +14,10 @@ public class Item {
     private Double discount;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
-
+    private String id;
 
     public Item() {
-
+        this.id = UUID.randomUUID().toString();
     }
 
     public Item(String category, String name, Double price, Double discount, Date date) {
@@ -67,5 +68,13 @@ public class Item {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 }

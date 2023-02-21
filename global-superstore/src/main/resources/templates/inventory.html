@@ -16,7 +16,9 @@
                  <th>Price</th>
                  <th>Discount</th>
                  <th>Order Date</th>
-                 <th> </th>
+                  <td>
+                      <a role="button" style="color:white; background-color: #263238" class="table-button" th:href="@{/}">Add item</a>
+                  </td>
               </tr>
               <tr th:each="item: ${items}">
                   <td th:text="${item.category}"></th>
@@ -25,8 +27,9 @@
                   <td th:text="${#numbers.formatCurrency(item.discount)}"></th>
                   <td th:text="${#dates.format(item.date,'yyyy-MM-dd')}"></th>
                  <td>
-                    <a role="button" style="color:white; background-color: #263238" class="table-button">Update</a>
+                    <a role="button" style="color:white; background-color: #263238" class="table-button" th:href="@{/(id = ${item.id})}">Update</a>
                  </td>
+
               </tr>
            </table>
         </div>
