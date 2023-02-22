@@ -20,15 +20,6 @@ public class Item {
         this.id = UUID.randomUUID().toString();
     }
 
-    public Item(String category, String name, Double price, Double discount, Date date) {
-        this.category = category;
-        this.name = name;
-        this.price = price;
-        this.discount = discount;
-        this.date = date;
-    }
-
-
 
     public String getCategory() {
         return category;
