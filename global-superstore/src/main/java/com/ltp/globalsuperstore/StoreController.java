@@ -2,11 +2,13 @@ package com.ltp.globalsuperstore;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,16 +29,25 @@ public class StoreController {
         } else {
             item = items.get(index);
         }
-
         model.addAttribute("item", item);
+
+
 
         return "form";
     }
 
     @PostMapping("/submitItem")
-    public String handleSubmit(Item item, RedirectAttributes redirectAttributes) {
+    public String handleSubmit(@Valid Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (item.getPrice() < item.getDiscount()) {
+            bindingResult.rejectValue("price", "", "Price cannot be less than discount");
+        }
+
         int index = getItemIndex(item.getId());
         String status = Constants.SUCCESS_STATUS;
+
+        if (bindingResult.hasErrors()) {
+            return "form";
+        }
         if (index == Constants.NOT_FOUND) {
             items.add(item);
         } else if (within5Days(item.getDate(), items.get(index).getDate())){
