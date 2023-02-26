@@ -9,26 +9,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Controller
 public class StoreController {
 
-    List<Item> items = new ArrayList<>();
+    StoreService storeService = new StoreService();
+
+
 
     @GetMapping("/")
     public String getForm(Model model, @RequestParam(required = false) String id) {
-        int index = getItemIndex(id);
+        int index = storeService.getItemIndex(id);
         Item item;
 
         if (index == Constants.NOT_FOUND) {
             item = new Item();
         } else {
-            item = items.get(index);
+            item = storeService.getItem(index);
         }
+
         model.addAttribute("item", item);
 
 
@@ -42,16 +43,16 @@ public class StoreController {
             bindingResult.rejectValue("price", "", "Price cannot be less than discount");
         }
 
-        int index = getItemIndex(item.getId());
+        int index = storeService.getItemIndex(item.getId());
         String status = Constants.SUCCESS_STATUS;
 
         if (bindingResult.hasErrors()) {
             return "form";
         }
         if (index == Constants.NOT_FOUND) {
-            items.add(item);
-        } else if (within5Days(item.getDate(), items.get(index).getDate())){
-            items.set(index, item);
+            storeService.addItem(item);
+        } else if (storeService.within5Days(item.getDate(), storeService.getItem(index).getDate())){
+            storeService.updateItem(item, index);
         } else {
             status = Constants.FAILED_STATUS;
         }
@@ -62,23 +63,7 @@ public class StoreController {
 
     @GetMapping("/inventory")
     public String getInventory(Model model) {
-        model.addAttribute("items", items);
+        model.addAttribute("items", storeService.getItems());
         return "inventory";
     }
-
-    public boolean within5Days(Date newDate, Date oldDate) {
-        long diff = Math.abs(newDate.getTime() - oldDate.getTime());
-        return (int) (TimeUnit.MILLISECONDS.toDays(diff)) <= 5;
-    }
-
-
-    public Integer getItemIndex(String id) {
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getId().equals(id)) {
-                return i;
-            }
-        }
-        return Constants.NOT_FOUND;
-    }
-
 }
