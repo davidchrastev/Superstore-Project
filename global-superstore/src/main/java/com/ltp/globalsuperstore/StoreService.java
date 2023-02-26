@@ -1,6 +1,5 @@
 package com.ltp.globalsuperstore;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -24,8 +23,8 @@ public class StoreService {
     }
 
     public Integer getItemIndex(String id) {
-        for (int i = 0; i < storeRepository.getItems().size(); i++) {
-            if (storeRepository.getItem(i).getId().equals(id)) {
+        for (int i = 0; i < getItems().size(); i++) {
+            if (getItem(i).getId().equals(id)) {
                 return i;
             }
         }
@@ -35,5 +34,30 @@ public class StoreService {
     public boolean within5Days(Date newDate, Date oldDate) {
         long diff = Math.abs(newDate.getTime() - oldDate.getTime());
         return (int) (TimeUnit.MILLISECONDS.toDays(diff)) <= 5;
+    }
+
+    public String handleSubmit(Item item) {
+        int index = getItemIndex(item.getId());
+        String status = Constants.SUCCESS_STATUS;
+
+        if (index == Constants.NOT_FOUND) {
+            addItem(item);
+        } else if (within5Days(item.getDate(), getItem(index).getDate())){
+            updateItem(item, index);
+        } else {
+            status = Constants.FAILED_STATUS;
+        }
+
+        return status;
+    }
+    public Item getItemById(String id) {
+        Item item;
+        int index = getItemIndex(id);
+        if (index == Constants.NOT_FOUND) {
+            item = new Item();
+        } else {
+            item = getItem(index);
+        }
+        return item;
     }
 }

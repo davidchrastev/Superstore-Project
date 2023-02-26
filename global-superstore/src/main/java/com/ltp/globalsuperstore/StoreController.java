@@ -17,23 +17,9 @@ public class StoreController {
 
     StoreService storeService = new StoreService();
 
-
-
     @GetMapping("/")
     public String getForm(Model model, @RequestParam(required = false) String id) {
-        int index = storeService.getItemIndex(id);
-        Item item;
-
-        if (index == Constants.NOT_FOUND) {
-            item = new Item();
-        } else {
-            item = storeService.getItem(index);
-        }
-
-        model.addAttribute("item", item);
-
-
-
+        model.addAttribute("item", storeService.getItemById(id));
         return "form";
     }
 
@@ -43,19 +29,12 @@ public class StoreController {
             bindingResult.rejectValue("price", "", "Price cannot be less than discount");
         }
 
-        int index = storeService.getItemIndex(item.getId());
-        String status = Constants.SUCCESS_STATUS;
-
         if (bindingResult.hasErrors()) {
             return "form";
         }
-        if (index == Constants.NOT_FOUND) {
-            storeService.addItem(item);
-        } else if (storeService.within5Days(item.getDate(), storeService.getItem(index).getDate())){
-            storeService.updateItem(item, index);
-        } else {
-            status = Constants.FAILED_STATUS;
-        }
+
+        String status = storeService.handleSubmit(item);
+
         redirectAttributes.addFlashAttribute("status", status);
 
         return "redirect:/inventory";
